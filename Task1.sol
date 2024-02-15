@@ -26,4 +26,7 @@ contract Task1{
     function GetValue_counter() public view returns(uint256){
         return counter.value;
     }
+    function GetDescription_counter() public view returns (string memory) {
+        return counter.description;
+    }
 }
