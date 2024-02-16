@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 contract ProposalContract {
     // Our contract code
     uint256 private counter;
+    address owner;
     struct Proposal {
         string title; // Title  of the proposal
         string description; // Description of the proposal
@@ -14,9 +15,19 @@ contract ProposalContract {
         bool is_active; // This shows if others can vote to our contract
     }
     mapping(uint256 => Proposal) proposal_history; // Recordings of previous proposals
-    function create(string calldata _title, string calldata _description, uint256 _total_vote_to_end) external {
+    constructor(){
+        owner = msg.sender;
+    }
+    modifier onlyOwner(){
+        require(msg.sender == owner);
+        _;
+    }
+    function create(string calldata _title, string calldata _description, uint256 _total_vote_to_end) external onlyOwner{
         counter += 1;
         proposal_history[counter] = Proposal(_title, _description, 0, 0, 0, _total_vote_to_end, false, true);
+    }
+    function setOwner(address _addr) public onlyOwner{
+        owner = _addr;
     }
 
 }
