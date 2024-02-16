@@ -1,4 +1,4 @@
-# Rise-in_TaskofSoldity
+## Rise-in_TaskofSoldity
 #Tasks from Rise in
 
 The course name is Solidity Fundamentals
