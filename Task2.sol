@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 contract ProposalContract {
     // Our contract code
     struct Proposal {
+        string title; // Title  of the proposal
         string description; // Description of the proposal
         uint256 approve; // Number of approve votes
         uint256 reject; // Number of reject votes
