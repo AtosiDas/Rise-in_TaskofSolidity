@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 contract ProposalContract {
     // Our contract code
+    uint256 private counter;
     struct Proposal {
         string title; // Title  of the proposal
         string description; // Description of the proposal
