@@ -4,6 +4,7 @@ contract ProposalContract {
     // Our contract code
     uint256 private counter;
     address owner;
+    address[] private voted_addresses;
     struct Proposal {
         string title; // Title  of the proposal
         string description; // Description of the proposal
@@ -17,6 +18,7 @@ contract ProposalContract {
     mapping(uint256 => Proposal) proposal_history; // Recordings of previous proposals
     constructor(){
         owner = msg.sender;
+        voted_addresses.push(msg.sender);
     }
     modifier onlyOwner(){
         require(msg.sender == owner);
@@ -29,5 +31,49 @@ contract ProposalContract {
     function setOwner(address _addr) public onlyOwner{
         owner = _addr;
     }
+    function vote(uint8 choice) external {
+        // Function logic
+        Proposal storage proposal = proposal_history[counter];
+        require(proposal.is_active == true, "The vote is not active.");
+        require(!isVoted(msg.sender),"You have already done your vote.");
+        uint256 total_vote = proposal.approve + proposal.reject + proposal.pass;
+        voted_addresses.push(msg.sender);
+        // Second part
+        if (choice == 1) {
+            proposal.approve += 1;
+            proposal.current_state = calculateCurrentState();
+        } else if (choice == 2) {
+            proposal.reject += 1;
+            proposal.current_state = calculateCurrentState();
+        } else if (choice == 0) {
+            proposal.pass += 1;
+            proposal.current_state = calculateCurrentState();
+        }
 
+        // Third part
+        if ((proposal.total_vote_to_end - total_vote == 1) && (choice == 1 || choice == 2 || choice == 0)) {
+            proposal.is_active = false;
+            voted_addresses = [owner];
+        }
+    }
+    function isVoted(address _addr) private {
+
+    }
+    function calculateCurrentState() private view returns(bool){
+        Proposal storage proposal = proposal_history[counter];
+        uint256 approve = proposal.approve;
+        uint256 reject = proposal.reject;
+        // uint256 pass = proposal.pass;
+
+        // if(pass % 2 == 1){
+        //     pass++;
+        // }
+        // pass = pass / 2;
+        if(approve > reject ){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
