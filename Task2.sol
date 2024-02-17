@@ -56,8 +56,13 @@ contract ProposalContract {
             voted_addresses = [owner];
         }
     }
-    function isVoted(address _addr) private {
-
+    function isVoted(address _addr) private view returns(bool){
+        for(uint i = 0; i < voted_addresses.length; i++){
+            if(voted_addresses[i] == _addr){
+                return true;
+            }
+        }
+        return false;
     }
     function calculateCurrentState() private view returns(bool){
         Proposal storage proposal = proposal_history[counter];
@@ -75,5 +80,16 @@ contract ProposalContract {
         else{
             return false;
         }
+    }
+    function terminateProposal() public onlyOwner{
+        Proposal storage proposal = proposal_history[counter];
+        require(proposal.is_active == true,"The vote is not active");
+        proposal.is_active = false;
+    }
+    function getCurrentProposal() public view returns (Proposal memory){
+        return proposal_history[counter];
+    }
+    function getProposal(uint256 num) public view returns(Proposal memory){
+        return proposal_history[num];
     }
 }
